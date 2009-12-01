@@ -1,4 +1,4 @@
-This is createspace.sty LaTeX package for typesetting books ready for CreateSpace.com
+This is createspace.sty LaTeX package for typesetting books ready for http://CreateSpace.com
 
   CreateSpace is trademarks of On-Demand Publishing LLC.,
   createspace.sty LaTeX package is an independent product and is by no
@@ -9,4 +9,6 @@ This is createspace.sty LaTeX package for typesetting books ready for CreateSpac
     ( http://creativecommons.org/licenses/by-sa/3.0/ )
 
   following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt)
+
+( manual will be written shortly )
 
