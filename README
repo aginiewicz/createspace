@@ -10,5 +10,5 @@ This is createspace.sty LaTeX package for typesetting books ready for http://Cre
 
   following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt)
 
-( manual will be written shortly )
+For documentation see http://wiki.github.com/aginiewicz/createspace/documentation
 
