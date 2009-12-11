@@ -42,6 +42,16 @@
 \createspace@l@outer=\createspace@outer
 \createspace@l@top=\createspace@top
 \createspace@l@bottom=\createspace@bottom
+\newif\ifcreatespace@industrystandard
+\ifcreatespace@colour
+\createspace@industrystandardfalse
+\else
+\ifcase\createspace@paper
+\createspace@industrystandardtrue
+\or
+\createspace@industrystandardfalse
+\fi
+\fi
 
 \ifdim\createspace@l@inner<0.25in
 \PackageWarning{createspace}{inner margin must be at least 0.25in}
@@ -96,6 +106,9 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=5.25in
   \createspace@l@height=8in
+  \ifcase\createspace@paper\relax\or
+    \createspace@industrystandardtrue
+  \fi
 \or
   \createspace@l@width=5.06in
   \createspace@l@height=7.81in
@@ -107,6 +120,7 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=5.5in
   \createspace@l@height=8.5in
+  \createspace@industrystandardtrue
 \else
   \PackageError{createspace}{cannot trim \createspace@sizename\space size}{change size or trim options}
 \fi
@@ -114,6 +128,9 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=6in
   \createspace@l@height=9in
+  \ifcase\createspace@paper\relax\or
+    \createspace@industrystandardtrue
+  \fi
 \else
   \PackageError{createspace}{cannot trim \createspace@sizename\space size}{change size or trim options}
 \fi
@@ -121,6 +138,9 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=7in
   \createspace@l@height=10in
+  \ifcreatespace@colour
+    \createspace@industrystandardtrue
+  \fi
 \or
   \createspace@l@width=6.69in
   \createspace@l@height=9.61in
@@ -137,12 +157,14 @@
   \else
   \def\createspace@croptype{small}
   \fi
-  \ifcreatespace@colour\else
-  \ifcase\createspace@paper\relax
-  \createspace@c@maxpages=440
-  \or
-  \createspace@c@maxpages=400
-  \fi
+  \ifcreatespace@colour
+    \createspace@industrystandardtrue
+  \else
+    \ifcase\createspace@paper\relax
+    \createspace@c@maxpages=440
+    \or
+    \createspace@c@maxpages=400
+    \fi
   \fi
 \or
   \createspace@l@width=7.5in
@@ -169,6 +191,7 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=8.25in
   \createspace@l@height=8.25in
+  \createspace@industrystandardfalse
   \ifcreatespace@bleed
   \ifcase\createspace@preview\relax\or
     \PackageError{createspace}{preview paper too small}{try previewing on letter paper}
@@ -198,6 +221,7 @@
 \ifcase\createspace@trim\relax
   \createspace@l@width=8.25in
   \createspace@l@height=6in
+  \createspace@industrystandardfalse
   \ifcreatespace@bleed
   \ifcase\createspace@preview\relax\or
     \PackageError{createspace}{preview paper too small}{try previewing on letter paper}
@@ -511,6 +535,30 @@
 \fi
 \ifnum\createspace@c@pages>\createspace@c@maxpages
 \PackageWarning{createspace}{your book has \the\createspace@pages\space pages. This is more than the maximum allowed number of pages (\the\createspace@c@maxpages)}
+\fi
+\ifcreatespace@industrystandard
+\ifcreatespace@colour\else
+\ifnum\createspace@c@pages<48
+\createspace@PackageInfo{your book isn't available through Bookstores and Online Retailers Expanded Distribution Channel because it has less than minimum page count (48 pages for black and white books)}
+\fi
+\fi
+\else
+\ifcreatespace@colour
+\createspace@PackageInfo{your book isn't available through Bookstores and Online Retailers Expanded Distribution Channel because it is prepared on custom trim size, you must use industry standard trim size.}
+\else
+\ifnum\createspace@c@pages<48
+\createspace@PackageInfo{your book isn't available through Bookstores and Online Retailers Expanded Distribution Channel because it has less than minimum page count (48 pages for black and white books) and is prepared on custom trim size, you must use industry standard trim size.}
+\fi
+\fi
+\ifcreatespace@colour
+\createspace@PackageInfo{industry standard trim sizes for colour books are: pocket, halfletter and novel}
+\else
+\ifcase\createspace@paper
+\createspace@PackageInfo{industry standard trim sizes for white and black books on white paper are: any size except of square or landscape}
+\or
+\createspace@PackageInfo{industry standard trim sizes for white and black books on cream paper are: pocket, journal and magazine}
+\fi
+\fi
 \fi
 \ifnum\createspace@c@pages<151
 \ifdim\createspace@l@gutter<0.125in
