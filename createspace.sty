@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{createspace}[2011/05/07 package for typesetting books ready for CreateSpace.com]
+\ProvidesPackage{createspace}[2011/05/14 package for typesetting books ready for CreateSpace.com]
 %This is createspace.sty LaTeX package for typesetting books ready for CreateSpace.com
 %  CreateSpace is trademarks of On-Demand Publishing LLC.,
 %  createspace.sty LaTeX package is an independent product and is by no
@@ -227,8 +227,14 @@
 \createspace@industrystandardfalse
 \def\createspace@extractsize#1,#2{\createspace@l@width=#1\createspace@l@height=#2}
 \expandafter\createspace@extractsize\createspace@customsize
+\ifdim\createspace@l@width<4in
+\PackageError{createspace}{page width cannot be smaller than 4in}{change the page dimensions}
+\fi
 \ifdim\createspace@l@width>8.5in
 \PackageError{createspace}{page width cannot be larger than 8.5in}{change the page dimensions}
+\fi
+\ifdim\createspace@l@height<6in
+\PackageError{createspace}{page height cannot be smaller than 6in}{change the page dimensions}
 \fi
 \ifcreatespace@colour
 \ifdim\createspace@l@height>11in
