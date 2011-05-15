@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{createspace}[2011/05/14 package for typesetting books ready for CreateSpace.com]
+\ProvidesPackage{createspace}[2011/05/15 package for typesetting books ready for CreateSpace.com]
 %This is createspace.sty LaTeX package for typesetting books ready for CreateSpace.com
 %  CreateSpace is trademarks of On-Demand Publishing LLC.,
 %  createspace.sty LaTeX package is an independent product and is by no
@@ -48,7 +48,7 @@
 \ifcreatespace@colour
 \createspace@industrystandardfalse
 \else
-\ifcase\createspace@paper
+\ifcase\createspace@paper\relax
 \createspace@industrystandardtrue
 \or
 \createspace@industrystandardfalse
@@ -256,6 +256,7 @@
 \fi
 
 \ifcase\createspace@preview\relax
+\createspace@PackageInfo{you cannot publish your book as preview, disable preview option before you submit your book}
 \createspace@makepreviewfalse
 \or
 \createspace@makepreviewtrue
@@ -783,6 +784,95 @@
 }
 \createspace@PackageInfo{book cost is \createspace@standard@price USD (\createspace@pro@price USD for pro plan)}
 \fi
+\fi
+}
+
+\def\@pdfsubject{}
+\def\@pdfkeywords{}
+\let\@pdftitle\@empty
+\let\@pdfauthor\@empty
+\let\cs@author\author
+\let\cs@title\title
+\renewcommand\author[1]{\pdfauthor{#1}\cs@author{#1}}
+\renewcommand\title[1]{\pdftitle{#1}\cs@title{#1}}
+\newcommand\pdfauthor[1]{\gdef\@pdfauthor{#1}}
+\newcommand\pdftitle[1]{\gdef\@pdftitle{#1}}
+\newcommand\pdfsubject[1]{\gdef\@pdfsubject{#1}}
+\newcommand\pdfkeywords[1]{\gdef\@pdfkeywords{#1}}
+
+\AtBeginDocument{
+\pdfminorversion=3
+\ifcreatespace@makepreview\else
+\ifx\@pdftitle\@empty
+\PackageError{createspace}{you must specify book title}{specify title using \protect\title\space or \protect\pdftitle\space command}
+\fi
+\ifx\@pdfauthor\@empty
+\PackageError{createspace}{you must specify book author}{specify author using \protect\author\space or \protect\pdfauthor\space command}
+\fi
+\pdfinfo{%
+  /Title (\@pdftitle)
+  /Author (\@pdfauthor)
+  /Subject (\@pdfsubject)
+  /Keywords (\@pdfkeywords)
+  /GTS_PDFXVersion (PDF/X-3:2002)
+}
+\ifcase\createspace@paper\relax
+\xdef\profile{OFCOM_PO_P4_F60_04}
+\else
+\xdef\profile{OFCOM_PO_P5_F60_04}
+\fi
+\pdfcatalog{%
+  /OutputIntents [ <<
+    /Info (none)
+    /Type /OutputIntent
+    /S /GTS_PDFX
+    /OutputConditionIdentifier (\profile)
+    /RegistryName (http://www.color.org/)
+  >> ]
+}
+\newcount\cs@temp
+\newdimen\cs@width\newdimen\cs@widthb
+\cs@width=\dimexpr\createspace@l@width*800/803\relax
+\advance\cs@width by 0.005pt
+\xdef\cs@value{\strip@pt\cs@width}
+\cs@temp=\cs@value
+\xdef\cs@widthbp{\the\cs@temp}
+\cs@widthb=\cs@widthbp pt
+\advance\cs@width by -\cs@widthb
+\multiply\cs@width by 100
+\xdef\cs@value{\strip@pt\cs@width}
+\cs@temp=\cs@value
+\xdef\cs@widthbp{\the\cs@temp}
+\cs@width=0.\cs@widthbp pt
+\advance\cs@width by \cs@widthb
+\newdimen\cs@height\newdimen\cs@heightb
+\cs@height=\dimexpr\createspace@l@height*800/803\relax
+\advance\cs@height by 0.005pt
+\xdef\cs@value{\strip@pt\cs@height}
+\cs@temp=\cs@value
+\xdef\cs@heightbp{\the\cs@temp}
+\cs@heightb=\cs@heightbp pt
+\advance\cs@height by -\cs@heightb
+\multiply\cs@height by 100
+\xdef\cs@value{\strip@pt\cs@height}
+\cs@temp=\cs@value
+\xdef\cs@heightbp{\the\cs@temp}
+\cs@height=0.\cs@heightbp pt
+\advance\cs@height by \cs@heightb
+\newdimen\cs@bleedT\cs@bleedT=0pt
+\newdimen\cs@bleedR\cs@bleedR=\cs@width
+\newdimen\cs@bleedB\cs@bleedB=\cs@height
+\ifcreatespace@bleed
+\advance\cs@bleedT by 9pt
+\advance\cs@bleedR by -9pt
+\advance\cs@bleedB by -9pt
+\fi
+\xdef\cs@attr{%
+  /MediaBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
+  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
+  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
+}
+\expandafter\pdfpageattr\expandafter{\cs@attr}%
 \fi
 }
 
