@@ -7,7 +7,7 @@
 %  This package is created and maintained by Andrzej Giniewicz, and is licensed
 %  under Creative Commons Attribution-Share Alike 3.0 Unported license
 %    ( http://creativecommons.org/licenses/by-sa/3.0/ )
-%  following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt)
+%  following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt), ifpdf (opt)
 
 \RequirePackage{xkeyval}
 \define@choicekey*+{createspace.sty}{size}[\val\nr]{pocket,halfletter,novel,journal,magazine,square,landscape}{\let\createspace@size\nr\let\createspace@sizename\val}{\PackageWarning{createspace}{unknown book size}}
@@ -16,7 +16,7 @@
 \define@choicekey*+{createspace.sty}{preview}[\val\nr]{false,a4,letter}[a4]{\let\createspace@preview\nr\let\createspace@previewname\val}{\PackageWarning{createspace}{unknown preview option}}
 \define@choicekey*+{createspace.sty}{colourpackage}[\val\nr]{none,color,xcolor}{\let\createspace@colourpackage\nr\let\createspace@colourpackagename\val}{\PackageWarning{createspace}{unknown colourpackage option}}
 \define@choicekey*+{createspace.sty}{colorpackage}[\val\nr]{none,color,xcolor}{\let\createspace@colorpackage\nr\let\createspace@colorpackagename\val}{\PackageWarning{createspace}{unknown colorpackage option}}
-\define@boolkeys{createspace.sty}[createspace@]{bleed,colour,color}[true]
+\define@boolkeys{createspace.sty}[createspace@]{bleed,colour,color,nopdf}[true]
 \define@cmdkeys{createspace.sty}[createspace@]{inner,outer,top,bottom,gutter,geometryextra,customsize}
 \presetkeys{createspace.sty}{size=novel,trim=0,paper=white,preview=false,gutter=0.3in,inner=0.5in,outer=0.5in,top=0.5in,bottom=0.5in,geometryextra={twoside,heightrounded,truedimen},colourpackage=xcolor,colorpackage=xcolor}{}
 \ProcessOptionsX
@@ -800,6 +800,9 @@
 \newcommand\pdfsubject[1]{\gdef\@pdfsubject{#1}}
 \newcommand\pdfkeywords[1]{\gdef\@pdfkeywords{#1}}
 
+\ifcreatespace@nopdf\else
+\RequirePackage{ifpdf}
+\ifpdf
 \AtBeginDocument{
 \pdfminorversion=3
 \ifcreatespace@makepreview\else
@@ -875,4 +878,8 @@
 \expandafter\pdfpageattr\expandafter{\cs@attr}%
 \fi
 }
+\else
+\PackageError{createspace}{no PDF supported engine detected}{recompile this document using PDFLaTeX}
+\fi
+\fi
 
