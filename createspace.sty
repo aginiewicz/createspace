@@ -803,8 +803,15 @@
 \ifcreatespace@nopdf\else
 \RequirePackage{ifpdf}
 \ifpdf
-\AtBeginDocument{
-\pdfminorversion=3
+\begingroup
+  \catcode`P=12
+  \catcode`T=12
+  \lowercase{
+    \def\x{\def\truncrem@pt##1.##2PT{##1}}}
+  \expandafter\endgroup\x
+\def\truncstrip@pt{\expandafter\truncrem@pt\the}
+\AtBeginDocument{%
+\pdfminorversion=3%
 \ifcreatespace@makepreview\else
 \ifx\@pdftitle\@empty
 \PackageError{createspace}{you must specify book title}{specify title using \protect\title\space or \protect\pdftitle\space command}
@@ -812,19 +819,19 @@
 \ifx\@pdfauthor\@empty
 \PackageError{createspace}{you must specify book author}{specify author using \protect\author\space or \protect\pdfauthor\space command}
 \fi
-\pdfinfo{%
+\pdfinfo{
   /Title (\@pdftitle)
   /Author (\@pdfauthor)
   /Subject (\@pdfsubject)
   /Keywords (\@pdfkeywords)
   /GTS_PDFXVersion (PDF/X-3:2002)
-}
+}%
 \ifcase\createspace@paper\relax
-\xdef\profile{OFCOM_PO_P4_F60_04}
+\xdef\profile{OFCOM_PO_P4_F60_04}%
 \else
-\xdef\profile{OFCOM_PO_P5_F60_04}
+\xdef\profile{OFCOM_PO_P5_F60_04}%
 \fi
-\pdfcatalog{%
+\pdfcatalog{
   /OutputIntents [ <<
     /Info (none)
     /Type /OutputIntent
@@ -832,49 +839,49 @@
     /OutputConditionIdentifier (\profile)
     /RegistryName (http://www.color.org/)
   >> ]
-}
+}%
 \newcount\cs@temp
 \newdimen\cs@width\newdimen\cs@widthb
 \cs@width=\dimexpr\createspace@l@width*800/803\relax
-\advance\cs@width by 0.005pt
-\xdef\cs@value{\strip@pt\cs@width}
+\advance\cs@width by 0.005pt\relax
+\xdef\cs@value{\truncstrip@pt\cs@width}%
 \cs@temp=\cs@value
-\xdef\cs@widthbp{\the\cs@temp}
-\cs@widthb=\cs@widthbp pt
+\xdef\cs@widthbp{\the\cs@temp}%
+\cs@widthb=\cs@widthbp pt\relax
 \advance\cs@width by -\cs@widthb
-\multiply\cs@width by 100
-\xdef\cs@value{\strip@pt\cs@width}
+\multiply\cs@width by 100\relax
+\xdef\cs@value{\truncstrip@pt\cs@width}%
 \cs@temp=\cs@value
-\xdef\cs@widthbp{\the\cs@temp}
-\cs@width=0.\cs@widthbp pt
+\xdef\cs@widthbp{\the\cs@temp}%
+\cs@width=0.\cs@widthbp pt\relax
 \advance\cs@width by \cs@widthb
 \newdimen\cs@height\newdimen\cs@heightb
 \cs@height=\dimexpr\createspace@l@height*800/803\relax
-\advance\cs@height by 0.005pt
-\xdef\cs@value{\strip@pt\cs@height}
+\advance\cs@height by 0.005pt\relax
+\xdef\cs@value{\truncstrip@pt\cs@height}%
 \cs@temp=\cs@value
-\xdef\cs@heightbp{\the\cs@temp}
-\cs@heightb=\cs@heightbp pt
+\xdef\cs@heightbp{\the\cs@temp}%
+\cs@heightb=\cs@heightbp pt\relax
 \advance\cs@height by -\cs@heightb
-\multiply\cs@height by 100
-\xdef\cs@value{\strip@pt\cs@height}
+\multiply\cs@height by 100\relax
+\xdef\cs@value{\truncstrip@pt\cs@height}%
 \cs@temp=\cs@value
-\xdef\cs@heightbp{\the\cs@temp}
-\cs@height=0.\cs@heightbp pt
+\xdef\cs@heightbp{\the\cs@temp}%
+\cs@height=0.\cs@heightbp pt\relax
 \advance\cs@height by \cs@heightb
-\newdimen\cs@bleedT\cs@bleedT=0pt
+\newdimen\cs@bleedT\cs@bleedT=0pt\relax
 \newdimen\cs@bleedR\cs@bleedR=\cs@width
 \newdimen\cs@bleedB\cs@bleedB=\cs@height
 \ifcreatespace@bleed
-\advance\cs@bleedT by 9pt
-\advance\cs@bleedR by -9pt
-\advance\cs@bleedB by -9pt
+\advance\cs@bleedT by 9pt\relax
+\advance\cs@bleedR by -9pt\relax
+\advance\cs@bleedB by -9pt\relax
 \fi
-\xdef\cs@attr{%
+\xdef\cs@attr{
   /MediaBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
   /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
   /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
-}
+}%
 \expandafter\pdfpageattr\expandafter{\cs@attr}%
 \fi
 }
