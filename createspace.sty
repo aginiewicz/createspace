@@ -230,7 +230,7 @@
 \fi
 \createspace@industrystandardfalse
 \def\createspace@extractsize#1,#2{\createspace@l@width=#1\createspace@l@height=#2}
-\expandafter\createspace@extractsize\createspace@customsize
+\expandafter\createspace@extractsize\createspace@customsize\relax
 \ifdim\createspace@l@width<4in
 \PackageError{createspace}{page width cannot be smaller than 4in}{change the page dimensions}
 \fi
