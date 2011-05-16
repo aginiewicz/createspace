@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{createspace}[2011/05/15 package for typesetting books ready for CreateSpace.com]
+\ProvidesPackage{createspace}[2011/05/16 package for typesetting books ready for CreateSpace.com]
 %This is createspace.sty LaTeX package for typesetting books ready for CreateSpace.com
 %  CreateSpace is trademarks of On-Demand Publishing LLC.,
 %  createspace.sty LaTeX package is an independent product and is by no
@@ -225,6 +225,9 @@
 \fi
 \else
 %customsize={dim,dim}
+\ifcase\createspace@trim\relax\else
+\PackageError{createspace}{cannot trim custom size}{use predefined sizes instead}
+\fi
 \createspace@industrystandardfalse
 \def\createspace@extractsize#1,#2{\createspace@l@width=#1\createspace@l@height=#2}
 \expandafter\createspace@extractsize\createspace@customsize
@@ -816,7 +819,6 @@
 \AtBeginDocument{%
 \pdfobjcompresslevel=0%
 \pdfminorversion=3%
-\ifcreatespace@makepreview\else
 \ifx\@pdftitle\@empty
 \PackageError{createspace}{you must specify book title}{specify title using \protect\title\space or \protect\pdftitle\space command}
 \fi
@@ -860,6 +862,13 @@
 \xdef\cs@widthbp{\the\cs@temp}%
 \cs@width=0.\cs@widthbp pt\relax
 \advance\cs@width by \cs@widthb
+\xdef\cs@widthbp{\strip@pt\cs@width}%
+\cs@widthb=\cs@widthbp bp\relax
+\advance\cs@widthb by -\createspace@l@width
+\ifdim\cs@widthb<0pt\multiply\cs@widthb by -1\fi
+\ifdim\cs@widthb<0.01pt\else
+\PackageWarning{createspace}{during conversion of width to PostScript Points rounding of more than 0.01 occured}
+\fi
 \newdimen\cs@height\newdimen\cs@heightb
 \cs@height=\dimexpr\createspace@l@height*800/803\relax
 \advance\cs@height by 0.005pt\relax
@@ -874,6 +883,13 @@
 \xdef\cs@heightbp{\the\cs@temp}%
 \cs@height=0.\cs@heightbp pt\relax
 \advance\cs@height by \cs@heightb
+\xdef\cs@heightbp{\strip@pt\cs@height}%
+\cs@heightb=\cs@heightbp bp\relax
+\advance\cs@heightb by -\createspace@l@height
+\ifdim\cs@heightb<0pt\multiply\cs@heightb by -1\fi
+\ifdim\cs@heightb<0.01pt\else
+\PackageWarning{createspace}{during conversion of height to PostScript Points rounding of more than 0.01 occured}
+\fi
 \newdimen\cs@bleedT\cs@bleedT=0pt\relax
 \newdimen\cs@bleedR\cs@bleedR=\cs@width
 \newdimen\cs@bleedB\cs@bleedB=\cs@height
@@ -882,13 +898,26 @@
 \advance\cs@bleedR by -9pt\relax
 \advance\cs@bleedB by -9pt\relax
 \fi
+\ifcase\createspace@preview\relax
 \xdef\cs@attr{
   /MediaBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
   /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
   /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
 }%
-\expandafter\pdfpageattr\expandafter{\cs@attr}%
+\or
+\xdef\cs@attr{
+  /MediaBox[0 0 595 842]
+  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
+  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
+}%
+\or
+\xdef\cs@attr{
+  /MediaBox[0 0 612 792]
+  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
+  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
+}%
 \fi
+\expandafter\pdfpageattr\expandafter{\cs@attr}%
 }
 \else
 \PackageError{createspace}{no PDF supported engine detected}{recompile this document using PDFLaTeX}
