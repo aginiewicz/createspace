@@ -8,7 +8,8 @@ This is createspace.sty LaTeX package for typesetting books ready for http://Cre
   under Creative Commons Attribution-Share Alike 3.0 Unported license
     ( http://creativecommons.org/licenses/by-sa/3.0/ )
 
-  following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt)
+  following packages are required: xkeyval, geometry,
+     color/xcolor (opt), crop (opt), ifpdf (opt), hyperref (opt)
 
 For documentation see http://wiki.github.com/aginiewicz/createspace/documentation
 
