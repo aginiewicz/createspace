@@ -7,7 +7,8 @@
 %  This package is created and maintained by Andrzej Giniewicz, and is licensed
 %  under Creative Commons Attribution-Share Alike 3.0 Unported license
 %    ( http://creativecommons.org/licenses/by-sa/3.0/ )
-%  following packages are required: xkeyval, geometry, color/xcolor (opt), crop (opt), ifpdf (opt)
+%  following packages are required: xkeyval, geometry,
+%     color/xcolor (opt), crop (opt), ifpdf (opt), hyperref (opt)
 
 \RequirePackage{xkeyval}
 \define@choicekey*+{createspace.sty}{size}[\val\nr]{pocket,halfletter,novel,journal,magazine,square,landscape}{\let\createspace@size\nr\let\createspace@sizename\val}{\PackageWarning{createspace}{unknown book size}}
@@ -256,7 +257,6 @@
 \fi
 
 \ifcase\createspace@preview\relax
-\createspace@PackageInfo{you cannot publish your book as preview, disable preview option before you submit your book}
 \createspace@makepreviewfalse
 \or
 \createspace@makepreviewtrue
@@ -638,6 +638,9 @@
 }
 
 \AtEndDocument{
+\ifcase\createspace@preview\relax
+\createspace@PackageInfo{you cannot publish your book as preview, disable preview option before you submit your book}
+\fi
 \newcount\createspace@c@pages \createspace@c@pages=\count0
 \advance\createspace@c@pages 1
 \divide\createspace@c@pages by 2
@@ -787,6 +790,10 @@
 \fi
 }
 
+\ifcreatespace@nopdf\else
+\RequirePackage{ifpdf}
+\ifpdf
+\RequirePackage[unicode=true,draft,bookmarks=false]{hyperref}
 \def\@pdfsubject{}
 \def\@pdfkeywords{}
 \let\@pdftitle\@empty
@@ -795,14 +802,10 @@
 \let\cs@title\title
 \renewcommand\author[1]{\pdfauthor{#1}\cs@author{#1}}
 \renewcommand\title[1]{\pdftitle{#1}\cs@title{#1}}
-\newcommand\pdfauthor[1]{\gdef\@pdfauthor{#1}}
-\newcommand\pdftitle[1]{\gdef\@pdftitle{#1}}
-\newcommand\pdfsubject[1]{\gdef\@pdfsubject{#1}}
-\newcommand\pdfkeywords[1]{\gdef\@pdfkeywords{#1}}
-
-\ifcreatespace@nopdf\else
-\RequirePackage{ifpdf}
-\ifpdf
+\newcommand\pdfauthor[1]{\pdfstringdef\@pdfauthor{#1}}
+\newcommand\pdftitle[1]{\pdfstringdef\@pdftitle{#1}}
+\newcommand\pdfsubject[1]{\pdfstringdef\@pdfsubject{#1}}
+\newcommand\pdfkeywords[1]{\pdfstringdef\@pdfkeywords{#1}}
 \begingroup
   \catcode`P=12
   \catcode`T=12
@@ -811,6 +814,7 @@
   \expandafter\endgroup\x
 \def\truncstrip@pt{\expandafter\truncrem@pt\the}
 \AtBeginDocument{%
+\pdfobjcompresslevel=0%
 \pdfminorversion=3%
 \ifcreatespace@makepreview\else
 \ifx\@pdftitle\@empty
@@ -832,6 +836,7 @@
 \xdef\profile{OFCOM_PO_P5_F60_04}%
 \fi
 \pdfcatalog{
+  /PageMode /UseNone
   /OutputIntents [ <<
     /Info (none)
     /Type /OutputIntent
