@@ -866,7 +866,7 @@
 \cs@widthb=\cs@widthbp bp\relax
 \advance\cs@widthb by -\createspace@l@width
 \ifdim\cs@widthb<0pt\multiply\cs@widthb by -1\fi
-\ifdim\cs@widthb<0.01pt\else
+\ifdim\cs@widthb<0.01bp\else
 \PackageWarning{createspace}{during conversion of width to PostScript Points rounding of more than 0.01 occured}
 \fi
 \newdimen\cs@height\newdimen\cs@heightb
@@ -887,7 +887,7 @@
 \cs@heightb=\cs@heightbp bp\relax
 \advance\cs@heightb by -\createspace@l@height
 \ifdim\cs@heightb<0pt\multiply\cs@heightb by -1\fi
-\ifdim\cs@heightb<0.01pt\else
+\ifdim\cs@heightb<0.01bp\else
 \PackageWarning{createspace}{during conversion of height to PostScript Points rounding of more than 0.01 occured}
 \fi
 \newdimen\cs@bleedT\cs@bleedT=0pt\relax
