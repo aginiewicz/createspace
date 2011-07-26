@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{createspace}
-    [2011/05/18 v1.0 package for typesetting books ready for CreateSpace.com]
+    [2011/05/18 v0.9 package for typesetting books ready for CreateSpace.com]
 \RequirePackage{xkeyval}
 \define@choicekey*+{createspace.sty}{size}[\val\nr]{pocket,halfletter,novel,journal,magazine,square,landscape}{\let\createspace@size\nr\let\createspace@sizename\val}{\PackageWarning{createspace}{unknown book size}}
 \define@choicekey*+{createspace.sty}{trim}[\val\nr]{0,1,2}[1]{\let\createspace@trim\nr\let\createspace@trimname\val}{\PackageWarning{createspace}{unknown trim option}}
@@ -340,6 +340,12 @@
       \def\createspace@croptype{border}
     \fi
   \fi
+\fi
+\fi
+\RequirePackage{ifpdf}
+\ifcreatespace@nopdf\else
+\ifpdf
+\RequirePackage[unicode=true,draft,bookmarks=false]{hyperref}
 \fi
 \fi
 \ifcreatespace@nopage\else
@@ -779,7 +785,6 @@
 \RequirePackage{ifpdf}
 \ifcreatespace@nopdf\else
 \ifpdf
-\RequirePackage[unicode=true,draft,bookmarks=false]{hyperref}
 \def\@pdfsubject{}
 \def\@pdfkeywords{}
 \let\@pdftitle\@empty

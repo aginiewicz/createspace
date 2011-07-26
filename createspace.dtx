@@ -507,6 +507,12 @@
   \fi
 \fi
 \fi
+\RequirePackage{ifpdf}
+\ifcreatespace@nopdf\else
+\ifpdf
+\RequirePackage[unicode=true,draft,bookmarks=false]{hyperref}
+\fi
+\fi
 \ifcreatespace@nopage\else
 \RequirePackage[papersize={\createspace@l@width,\createspace@l@height},hmargin={\createspace@l@inner,\createspace@l@outer},vmargin={\createspace@l@top,\createspace@l@bottom},bindingoffset=\createspace@l@gutter,\createspace@geometryextra]{geometry}
 \fi
@@ -1136,7 +1142,6 @@
 \RequirePackage{ifpdf}
 \ifcreatespace@nopdf\else
 \ifpdf
-\RequirePackage[unicode=true,draft,bookmarks=false]{hyperref}
 %    \end{macrocode}
 %
 % \begin{macro}{\@pdfsubject}
