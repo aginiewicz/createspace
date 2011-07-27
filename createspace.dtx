@@ -26,7 +26,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{createspace}
 %<*package>
-    [2011/05/18 v0.9 package for typesetting books ready for CreateSpace.com]
+    [2011/07/27 v0.91 package for typesetting books ready for CreateSpace.com]
 %</package>
 %
 %<*driver>
@@ -43,7 +43,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{1733}
+% \CheckSum{1698}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -63,6 +63,7 @@
 %
 %
 % \changes{0.9}{2011/05/18}{First DTX version, WIP}
+% \changes{0.91}{2011/07/27}{Adjusted page dimensions setup}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -1399,41 +1400,14 @@
 \advance\cs@bleedR by -9pt\relax
 \advance\cs@bleedB by -9pt\relax
 \fi
-\ifcase\createspace@preview\relax
 %    \end{macrocode}
 %
 % \begin{macro}{\cs@attr}
 %    \begin{macrocode}
-\xdef\cs@attr{
-  /MediaBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
+\xdef\cs@attr{%
+/BleedBox [0 0 \strip@pt\cs@width\space\strip@pt\cs@height]^^J%
+/TrimBox [0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]%
 }%
-\or
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\cs@attr}
-%    \begin{macrocode}
-\xdef\cs@attr{
-  /MediaBox[0 0 595 842]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
-}%
-\or
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\cs@attr}
-%    \begin{macrocode}
-\xdef\cs@attr{
-  /MediaBox[0 0 612 792]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
-}%
-\fi
 \expandafter\pdfpageattr\expandafter{\cs@attr}%
 }
 %    \end{macrocode}

@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{createspace}
-    [2011/05/18 v0.9 package for typesetting books ready for CreateSpace.com]
+    [2011/07/27 v0.91 package for typesetting books ready for CreateSpace.com]
 \RequirePackage{xkeyval}
 \define@choicekey*+{createspace.sty}{size}[\val\nr]{pocket,halfletter,novel,journal,magazine,square,landscape}{\let\createspace@size\nr\let\createspace@sizename\val}{\PackageWarning{createspace}{unknown book size}}
 \define@choicekey*+{createspace.sty}{trim}[\val\nr]{0,1,2}[1]{\let\createspace@trim\nr\let\createspace@trimname\val}{\PackageWarning{createspace}{unknown trim option}}
@@ -886,25 +886,10 @@
 \advance\cs@bleedR by -9pt\relax
 \advance\cs@bleedB by -9pt\relax
 \fi
-\ifcase\createspace@preview\relax
-\xdef\cs@attr{
-  /MediaBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
+\xdef\cs@attr{%
+/BleedBox [0 0 \strip@pt\cs@width\space\strip@pt\cs@height]^^J%
+/TrimBox [0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]%
 }%
-\or
-\xdef\cs@attr{
-  /MediaBox[0 0 595 842]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
-}%
-\or
-\xdef\cs@attr{
-  /MediaBox[0 0 612 792]
-  /BleedBox[0 0 \strip@pt\cs@width\space\strip@pt\cs@height]
-  /TrimBox[0 \strip@pt\cs@bleedT\space\strip@pt\cs@bleedR\space\strip@pt\cs@bleedB]
-}%
-\fi
 \expandafter\pdfpageattr\expandafter{\cs@attr}%
 }
 \else
