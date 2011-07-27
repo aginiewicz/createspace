@@ -28,7 +28,7 @@
 \define@choicekey*+{createspace.sty}{preview}[\val\nr]{false,a4,letter}[a4]{\let\createspace@preview\nr\let\createspace@previewname\val}{\PackageWarning{createspace}{unknown preview option}}
 \define@choicekey*+{createspace.sty}{colourpackage}[\val\nr]{none,color,xcolor}{\let\createspace@colourpackage\nr\let\createspace@colourpackagename\val}{\PackageWarning{createspace}{unknown colourpackage option}}
 \define@choicekey*+{createspace.sty}{colorpackage}[\val\nr]{none,color,xcolor}{\let\createspace@colorpackage\nr\let\createspace@colorpackagename\val}{\PackageWarning{createspace}{unknown colorpackage option}}
-\define@boolkeys{createspace.sty}[createspace@]{bleed,colour,color,nopdf,nopage}[true]
+\define@boolkeys{createspace.sty}[createspace@]{bleed,colour,color,nopdf,nopage,noicc}[true]
 \define@cmdkeys{createspace.sty}[createspace@]{inner,outer,top,bottom,gutter,geometryextra,customsize}
 \presetkeys{createspace.sty}{size=novel,trim=0,paper=white,preview=false,gutter=0.3in,inner=0.5in,outer=0.5in,top=0.5in,bottom=0.5in,geometryextra={twoside,heightrounded,truedimen},colourpackage=xcolor,colorpackage=xcolor}{}
 \ProcessOptionsX
@@ -598,7 +598,7 @@
 \crop[\createspace@croptype]
 \fi
 \fi
-\newcommand\calcln[3][65]{
+\newcommand\cs@calcln[3][65]{
 \ifx\log@digits\undefined\newcount\log@digits\fi
 \log@digits=0
 \def\log@count##1##2\log@tillthis{\advance\log@digits by 1\xdef\log@rest{##2}\ifx\log@rest\@empty\else\log@count ##2\log@tillthis\fi}
@@ -647,7 +647,7 @@
 \ifnum\temp<6
 \temp=6
 \fi
-\expandafter\calcln\expandafter{\the\temp}{createspace@res}
+\expandafter\cs@calcln\expandafter{\the\temp}{createspace@res}
 \newdimen\createspace@log \createspace@log=\createspace@res pt
 \multiply\createspace@log by 3
 \divide\createspace@log by 20
@@ -813,28 +813,43 @@
 \ifx\@pdfauthor\@empty
 \PackageError{createspace}{you must specify book author}{specify author using \protect\author\space or \protect\pdfauthor\space command}
 \fi
+\ifcreatespace@noicc
 \pdfinfo{
   /Title (\@pdftitle)
   /Author (\@pdfauthor)
   /Subject (\@pdfsubject)
   /Keywords (\@pdfkeywords)
-  /GTS_PDFXVersion (PDF/X-3:2002)
+}%
+\else
+\pdfinfo{
+  /Title (\@pdftitle)
+  /Author (\@pdfauthor)
+  /Subject (\@pdfsubject)
+  /Keywords (\@pdfkeywords)
+  /GTS_PDFXVersion (PDF/X-1:2001)
+  /GTS_PDFXConformance (PDF/X-1a:2001)
 }%
 \ifcase\createspace@paper\relax
-\xdef\profile{OFCOM_PO_P4_F60_04}%
+\immediate\pdfobj stream attr{/N 4}  file{PSO_Uncoated_ISO12647_bas.ICC}%
+\edef\cs@profile{\the\pdflastobj}%
+\xdef\cs@profilename{PSO Uncoated ISO12647}%
 \else
-\xdef\profile{OFCOM_PO_P5_F60_04}%
+\immediate\pdfobj stream attr{/N 4}  file{ISOuncoatedyellowish_bas.ICC}%
+\edef\cs@profile{\the\pdflastobj}%
+\xdef\cs@profilename{ISO Uncoated Yellowish}%
 \fi
+\def\cs@backslash{\expandafter\@gobble\string\\}
 \pdfcatalog{
   /PageMode /UseNone
   /OutputIntents [ <<
-    /Info (none)
     /Type /OutputIntent
     /S /GTS_PDFX
-    /OutputConditionIdentifier (\profile)
+    /OutputConditionIdentifier (\cs@profilename\space\cs@backslash(basICColor\cs@backslash))
+    /DestOutputProfile \cs@profile\space 0 R
     /RegistryName (http://www.color.org/)
   >> ]
 }%
+\fi
 \newcount\cs@temp
 \newdimen\cs@width\newdimen\cs@widthb
 \cs@width=\dimexpr\createspace@l@width*800/803\relax
